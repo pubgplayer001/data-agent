@@ -3,41 +3,40 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div class="min-vh-100 d-flex flex-column">
+  <div id="app-root" class="vh-100 d-flex flex-column bg-light text-dark">
     <RouterView />
   </div>
 </template>
 
 <style>
-/* ensure full height app root */
+/* Global styles for light theme */
 html, body, #app {
   height: 100%;
   margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Arial', sans-serif;
+  background: #f8f9fa; /* Light background */
+  color: #212529; /* Dark text */
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* ensure top-level layout fills available space */
 .app-layout,
 .app-layout > * {
   height: 100%;
 }
 
-/* ensure main content stretches when used without .app-layout present */
 .main-area {
   min-height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-/* small helper to avoid accidental body scroll while keeping content scrollable where intended */
 body {
   overflow: hidden;
 }
+
 #app > * {
   height: 100%;
   overflow: hidden;

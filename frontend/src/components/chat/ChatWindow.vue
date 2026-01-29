@@ -1,16 +1,18 @@
 <template>
-  <div class="d-flex flex-column h-100">
-    <header class="d-flex align-items-center justify-content-between border-bottom p-3">
+  <div class="d-flex flex-column h-100 bg-white">
+    <header class="d-flex align-items-center justify-content-between border-bottom p-3 bg-light">
       <div>
         <h5 class="mb-0">{{ conversation?.title || 'New Conversation' }}</h5>
         <small class="text-muted">ID: {{ conversation?.id || '—' }}</small>
       </div>
       <div>
-        <button class="btn btn-sm btn-outline-secondary" @click="$emit('refresh')"><i class="bi bi-arrow-repeat"></i> Refresh</button>
+        <button class="btn btn-sm btn-outline-primary" @click="$emit('refresh')">
+          <i class="bi bi-arrow-repeat"></i> Refresh
+        </button>
       </div>
     </header>
 
-    <div ref="messagesContainer" class="flex-fill overflow-auto p-3 d-flex flex-column gap-2" role="log" aria-live="polite">
+    <div ref="messagesContainer" class="flex-fill overflow-auto p-3 d-flex flex-column gap-2 bg-white" role="log" aria-live="polite">
       <div
         v-for="msg in messages"
         :key="msg.id"
@@ -23,7 +25,7 @@
       </div>
     </div>
 
-    <div class="border-top p-3">
+    <div class="border-top p-3 bg-light">
       <ChatInput @send="sendMessage" />
     </div>
   </div>

@@ -10,7 +10,7 @@ let user = null
 try {
   const raw = localStorage.getItem('user')
   user = raw ? JSON.parse(raw) : null
-} catch (e) {
+} catch {
   user = null
 }
 
@@ -31,39 +31,38 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside))
 </script>
 
 <template>
-  <div ref="container" class="dropdown w-100">
-    <button
-      class="btn btn-sm btn-outline-light dropdown-toggle w-100 d-flex align-items-center gap-2"
-      type="button"
-      @click="toggle"
-    >
-      <img
-        :src="user?.avatarUrl || logo"
-        alt="avatar"
-        style="width:28px;height:28px;border-radius:6px"
-      />
-      <div class="text-start flex-fill" v-if="user">
-        <div class="fw-semibold small mb-0">{{ user.name }}</div>
-        <div class="small text-muted">{{ user.email }}</div>
-      </div>
-      <div v-else class="text-start flex-fill small">Guest</div>
-    </button>
+  <div ref="container" class="w-100">
+    <div class="d-flex align-items-center gap-2">
+      <button
+        class="btn btn-sm btn-outline-light d-flex align-items-center gap-2 w-100"
+        type="button"
+        @click="toggle"
+        :aria-expanded="open"
+        aria-haspopup="true"
+      >
+        <img :src="user?.avatarUrl || logo" alt="avatar" class="rounded" style="width:36px;height:36px;object-fit:cover" />
+        <div class="text-start flex-fill" v-if="user && !$attrs.class?.includes('collapsed')">
+          <div class="fw-semibold small mb-0">{{ user.name }}</div>
+          <div class="small text-muted">{{ user.email }}</div>
+        </div>
+        <div v-else class="text-start flex-fill small">Guest</div>
+      </button>
+    </div>
 
-    <ul v-if="open" class="dropdown-menu show w-100 mt-1 p-2">
-      <li class="px-2 py-1">
+    <div v-if="open" class="card mt-2 w-100 shadow-sm">
+      <div class="card-body p-2">
         <div class="fw-bold">{{ user?.name || 'Guest User' }}</div>
-        <div class="text-muted small">{{ user?.email || '' }}</div>
-      </li>
-      <li><hr class="dropdown-divider"></li>
-      <li class="px-2">
-        <button class="btn btn-sm btn-danger w-100" @click="logout">
-          <i class="bi bi-box-arrow-right"></i> Logout
-        </button>
-      </li>
-    </ul>
+        <div class="text-muted small mb-2">{{ user?.email || '' }}</div>
+        <div class="d-grid">
+          <button class="btn btn-sm btn-danger" @click="logout">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* minimal; relies on Bootstrap */
+.card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); }
 </style>

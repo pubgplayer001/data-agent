@@ -33,3 +33,51 @@ a,
     padding: 0 2rem;
   }
 }
+
+/* Minimal, non-positional layout helpers to work with Bootstrap utilities */
+
+/* Ensure app children can fill available height and scroll where intended */
+.app-layout, .main-area, .vh-100 {
+  height: 100%;
+}
+
+/* Sidebar: use a fixed width but remain responsive */
+.sidebar {
+  min-width: 260px;
+  max-width: 320px;
+  height: 100%;
+  background: linear-gradient(180deg,#0b0c0d,#111317);
+  border-right: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Chat area: full height, scrollable messages region */
+.chat-window {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Messages container must flex-grow and be scrollable */
+.messages-container {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+/* Ensure inputs and controls do not cause layout overflow */
+.chat-input {
+  flex-shrink: 0;
+  padding: 0.75rem;
+  border-top: 1px solid rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.01);
+}
+
+/* Avoid global overflow:hidden; let children control scroll */
+html, body, #app, #app-root {
+  overflow: auto;
+}
+
+/* Small responsive tweaks */
+@media (max-width: 768px) {
+  .sidebar { min-width: 72px; max-width: 72px; }
+}

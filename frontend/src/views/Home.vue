@@ -1,8 +1,8 @@
 <template>
   <div class="container-fluid vh-100 p-0">
     <div class="row g-0 h-100">
-      <!-- Sidebar: use auto width -->
-      <div class="col-auto bg-dark text-light border-end" style="width: 280px;">
+      <!-- Sidebar column: no inline width so Sidebar CSS controls width -->
+      <div class="col-auto p-0">
         <Sidebar
           :conversations="conversations"
           :activeConversation="activeConversation"
@@ -11,7 +11,7 @@
       </div>
 
       <!-- Main area: fill rest -->
-      <div class="col d-flex flex-column">
+      <div class="col p-0 d-flex flex-column">
         <ChatWindow v-if="isLoggedIn" :conversation="activeConversation" />
         <div v-else class="d-flex align-items-center justify-content-center h-100">
           <div class="text-center p-4">
@@ -46,5 +46,6 @@ const selectConversation = (conv) => {
 </script>
 
 <style scoped>
-/* ensure the Home view uses full height */
+/* ensure full height rows */
+.row.h-100 { height: 100%; }
 </style>
