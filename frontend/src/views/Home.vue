@@ -1,22 +1,26 @@
 <template>
-  <div class="app-layout">
-    <Sidebar
-      v-if="isLoggedIn"
-      :conversations="conversations"
-      :activeConversation="activeConversation"
-      @select="selectConversation"
-    />
-
-    <main class="main-area">
-      <ChatWindow
-        v-if="isLoggedIn"
-        :conversation="activeConversation"
-      />
-      <div v-else class="logged-out">
-        <h2>Welcome</h2>
-        <p>Please login to start chatting</p>
+  <div class="container-fluid vh-100 p-0">
+    <div class="row g-0 h-100">
+      <!-- Sidebar: use auto width -->
+      <div class="col-auto bg-dark text-light border-end" style="width: 280px;">
+        <Sidebar
+          :conversations="conversations"
+          :activeConversation="activeConversation"
+          @select="selectConversation"
+        />
       </div>
-    </main>
+
+      <!-- Main area: fill rest -->
+      <div class="col d-flex flex-column">
+        <ChatWindow v-if="isLoggedIn" :conversation="activeConversation" />
+        <div v-else class="d-flex align-items-center justify-content-center h-100">
+          <div class="text-center p-4">
+            <h2>Welcome</h2>
+            <p>Please login to start chatting</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,9 +33,9 @@ const isLoggedIn = computed(() => !!localStorage.getItem('token'))
 
 // dummy data for now
 const conversations = ref([
-  { id: 1, title: 'Project ideas' },
-  { id: 2, title: 'Flask doubts' },
-  { id: 3, title: 'Random chat' }
+  { id: 1, title: 'Project ideas', lastText: 'Kickoff notes', updatedAt: Date.now() - 1000 * 60 * 60 },
+  { id: 2, title: 'Flask doubts', lastText: 'Routes issue', updatedAt: Date.now() - 1000 * 60 * 10 },
+  { id: 3, title: 'Random chat', lastText: 'Hello!', updatedAt: Date.now() - 1000 * 60 * 2 }
 ])
 
 const activeConversation = ref(conversations.value[0])
@@ -42,16 +46,5 @@ const selectConversation = (conv) => {
 </script>
 
 <style scoped>
-.app-layout {
-  display: flex;
-  height: 100vh;
-  background: #f7f7f8;
-}
-
-.main-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
+/* ensure the Home view uses full height */
 </style>

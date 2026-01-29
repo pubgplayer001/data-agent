@@ -1,120 +1,63 @@
 <template>
-  <aside :class="{ collapsed }" class="sidebar">
-    <div class="top">
+  <div class="d-flex flex-column h-100">
+    <div class="d-flex align-items-center gap-2 p-3 border-bottom">
       <button
-        class="toggle"
-        :aria-expanded="!collapsed"
-        :title="collapsed ? 'Expand' : 'Collapse'"
+        class="btn btn-sm btn-outline-light"
         @click="collapsed = !collapsed"
+        :title="collapsed ? 'Expand' : 'Collapse'"
       >
-        <span class="hamburger">☰</span>
+        <i class="bi bi-list"></i>
       </button>
-
-      <div v-if="!collapsed" class="brand">
-        <img src="@/assets/logo.svg" alt="logo" class="brand-logo" />
-        <h1 class="brand-title">Data Agent</h1>
+      <div v-if="!collapsed" class="d-flex align-items-center gap-2 ms-2">
+        <img src="@/assets/logo.svg" alt="logo" style="width:28px;height:28px" />
+        <strong>Data Agent</strong>
       </div>
     </div>
 
-    <div class="list-wrap">
+    <div class="flex-fill overflow-auto p-2">
       <ConversationList
-        v-if="!collapsed"
-        :conversations="conversations"
-        :active="activeConversation"
-        @select="$emit('select', $event)"
-      />
-
-      <ConversationList
-        v-else
         :conversations="conversations"
         :active="activeConversation"
         @select="$emit('select', $event)"
       />
     </div>
 
-    <div class="bottom">
-      <UserMenu />
+    <div class="p-3 border-top">
+      <div v-if="isLoggedIn" class="d-flex align-items-center gap-2">
+        <UserMenu class="flex-grow-1" />
+        <button class="btn btn-sm btn-danger" @click="logout">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+      </div>
+
+      <div v-else class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-light flex-fill" @click="goLogin">Login</button>
+        <button class="btn btn-sm btn-primary flex-fill" @click="goRegister">Create account</button>
+      </div>
     </div>
-  </aside>
+  </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import ConversationList from '@/components/conversation/ConversationList.vue'
 import UserMenu from './UserMenu.vue'
 
 defineProps(['conversations', 'activeConversation'])
 const collapsed = ref(false)
+
+const router = useRouter()
+const isLoggedIn = computed(() => !!localStorage.getItem('token'))
+
+const goLogin = () => router.push('/login')
+const goRegister = () => router.push('/register')
+const logout = () => {
+  localStorage.clear()
+  router.push('/login')
+}
 </script>
 
 <style scoped>
-.sidebar {
-  width: 260px;
-  background: linear-gradient(180deg,#0f1113 0%, #17191c 100%);
-  color: #e6eef8;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  border-right: 1px solid rgba(255,255,255,0.04);
-}
-
-.sidebar.collapsed {
-  width: 72px;
-}
-
-.top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-
-.toggle {
-  background: transparent;
-  border: none;
-  padding: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: inherit;
-}
-.toggle:focus {
-  outline: 2px solid rgba(84,105,212,0.22);
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.brand-logo {
-  width: 30px;
-  height: 30px;
-  opacity: 0.95;
-}
-.brand-title {
-  font-size: 14px;
-  margin: 0;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  color: #f5f7fb;
-}
-
-/* make list take remaining space and be scrollable */
-.list-wrap {
-  flex: 1;
-  overflow: hidden;
-}
-
-/* bottom area keeps user menu anchored */
-.bottom {
-  padding: 10px;
-  border-top: 1px solid rgba(255,255,255,0.02);
-}
-
-/* collapsed state tweaks */
-.sidebar.collapsed .brand,
-.sidebar.collapsed .brand-title {
-  display: none;
-}
+/* keep sidebar full height inside its column */
 </style>
