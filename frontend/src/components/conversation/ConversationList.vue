@@ -61,20 +61,35 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
 
 const props = defineProps({
-  conversations: Array,
   active: Object
 })
 
 const filter = ref('')
+const conversations = ref([])
+
+// Fetch conversations from the backend
+const fetchConversations = async () => {
+  try {
+    const userId = localStorage.getItem('user_id') // Assuming user_id is stored in localStorage
+    const response = await axios.get(`http://localhost:5000/api/conversations/user/${userId}`)
+    conversations.value = response.data
+  } catch (error) {
+    console.error('Error fetching conversations:', error)
+  }
+}
+
+onMounted(() => {
+  fetchConversations()
+})
 
 const filtered = computed(() => {
-  const arr = Array.isArray(props.conversations) ? props.conversations : []
-  if (!filter.value) return arr
+  if (!filter.value) return conversations.value
   const q = filter.value.toLowerCase()
-  return arr.filter(
+  return conversations.value.filter(
     (c) => (c.title || '').toLowerCase().includes(q) || (c.lastText || '').toLowerCase().includes(q)
   )
 })
@@ -86,18 +101,18 @@ const getInitial = (title) => {
 const formatTime = (timestamp) => {
   if (!timestamp) return ''
   const now = Date.now()
-  const diff = now - timestamp
-  
+  const diff = now - new Date(timestamp).getTime()
+
   const seconds = Math.floor(diff / 1000)
   const minutes = Math.floor(seconds / 60)
   const hours = Math.floor(minutes / 60)
   const days = Math.floor(hours / 24)
-  
+
   if (seconds < 60) return 'Just now'
   if (minutes < 60) return `${minutes}m ago`
   if (hours < 24) return `${hours}h ago`
   if (days < 7) return `${days}d ago`
-  
+
   const date = new Date(timestamp)
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }

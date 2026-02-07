@@ -1,7 +1,7 @@
-import os
-print("this is file named test.py")
-print(__name__)
-print(__file__)
-print(os.path.dirname(__file__))
-def add():
-    return 10
+
+from dotenv import load_dotenv
+
+load_dotenv()
+import application.ai_agent
+
+

@@ -35,10 +35,14 @@ from application.api import *
 
 
 api.add_resource(UserAPI, "/api/user/<string:username>", "/api/user")
-api.add_resource(LoginAPI, "/api/login") 
+api.add_resource(LoginAPI, "/api/login")
 api.add_resource(RegisterAPI, "/api/register")
-
-
+api.add_resource(FileAPI, "/api/files", "/api/files/<string:file_id>")
+api.add_resource(AIServiceAPI, "/api/ai_service")
+api.add_resource(ConversationsAPI, 
+                 "/api/conversations",  # For creating a new conversation (POST)
+                 "/api/conversations/<string:conversation_id>",  # For specific conversation (GET, PUT, DELETE)
+                 "/api/conversations/user/<string:user_id>")  # For fetching all conversations of a user
 
 if __name__ == "__main__":
     db.create_all()
